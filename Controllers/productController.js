@@ -1,7 +1,5 @@
 const { PrismaClient } = require('@prisma/client');
-const cloudinary = require("cloudinary").v2;
 const asyncHandler = require("express-async-handler");
-const fs = require("fs");
 const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, NotFoundError, UnauthenticatedError } = require("../errors");
 
@@ -114,32 +112,6 @@ const editProduct = asyncHandler(async (req, res) => {
   }
 });
 
-const uploadProductImage = asyncHandler(async (req, res) => {
-  if (!req.files || !req.files.image) {
-    throw new BadRequestError("Image files not found");
-  }
-
-  const imageFiles = Array.isArray(req.files.image) ? req.files.image : [req.files.image];
-
-  try {
-    const uploadPromises = imageFiles.map(async (file) => {
-      const result = await cloudinary.uploader.upload(file.tempFilePath, {
-        use_filename: true,
-        folder: 'sample-uploads',
-      });
-      fs.unlinkSync(file.tempFilePath);
-      return result.secure_url;
-    });
-
-    const uploadedImages = await Promise.all(uploadPromises);
-
-    res.status(StatusCodes.OK).json({ images: uploadedImages });
-  } catch (error) {
-    console.log(error);
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message });
-  }
-});
-
 const searchProducts = asyncHandler(async (req, res) => {
   const { search, category, sortBy, order = 'asc' } = req.body;
 
@@ -183,7 +155,6 @@ module.exports = {
   deleteProduct,
   editProduct,
   createProduct,
-  uploadProductImage,
   searchProducts,
   getProductById,
 };

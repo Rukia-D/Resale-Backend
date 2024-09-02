@@ -12,6 +12,7 @@ const PORT = process.env.PORT || 8005;
 
 app.use('/api/v1/auth', authRoutes);
 app.use("/api/v1/products", productRoutes);
+app.use("/api/v1/user", userRoutes);
 
 app.listen(PORT,()=>{
     console.log(`App listinng on port ${PORT}`)
