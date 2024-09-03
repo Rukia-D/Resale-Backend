@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const authRoutes = require('./Routers/authRouter');
 const productRoutes = require("./Routers/productRouter")
+const userRoutes = require("./Routers/userRoutes")
 const app = express();
 
 app.use(express.json());
